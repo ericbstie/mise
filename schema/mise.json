@@ -3502,6 +3502,10 @@
             "post-tools": {
               "description": "runs after `mise install` installs missing `[tools]`",
               "$ref": "#/$defs/bootstrap_hook"
+            },
+            "final": {
+              "description": "runs after the `bootstrap` task, at the very end of `mise bootstrap`",
+              "$ref": "#/$defs/bootstrap_hook"
             }
           }
         }
