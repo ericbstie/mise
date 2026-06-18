@@ -3478,6 +3478,14 @@
             "post-dotfiles": {
               "description": "runs after `mise dotfiles apply` applies `[dotfiles]`",
               "$ref": "#/$defs/bootstrap_hook"
+            },
+            "pre-defaults": {
+              "description": "runs before `mise bootstrap macos-defaults apply` writes `[bootstrap.macos.defaults]`",
+              "$ref": "#/$defs/bootstrap_hook"
+            },
+            "post-defaults": {
+              "description": "runs after `mise bootstrap macos-defaults apply` writes `[bootstrap.macos.defaults]`",
+              "$ref": "#/$defs/bootstrap_hook"
             }
           }
         }
