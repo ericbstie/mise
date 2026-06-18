@@ -2298,6 +2298,44 @@
         "$ref": "#/$defs/hook_definition"
       }
     },
+    "bootstrap_hook": {
+      "description": "command(s) to run at a bootstrap phase: a command string, an array of command strings, or a table with a `run` field",
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "shell command to run at this bootstrap phase"
+        },
+        {
+          "type": "array",
+          "description": "shell commands to run, in order, at this bootstrap phase",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "object",
+          "description": "table form of a bootstrap phase hook",
+          "properties": {
+            "run": {
+              "description": "shell command, or array of shell commands, to run at this bootstrap phase",
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          },
+          "required": ["run"],
+          "additionalProperties": false
+        }
+      ]
+    },
     "watch_files": {
       "description": "files to watch for changes",
       "type": "array",
@@ -3418,6 +3456,20 @@
               "additionalProperties": {
                 "type": "string"
               }
+            }
+          }
+        },
+        "hooks": {
+          "type": "object",
+          "description": "commands to run at named points during `mise bootstrap`; each phase is a command string, an array of command strings, or a table with a `run` field",
+          "properties": {
+            "pre-packages": {
+              "description": "runs before `mise bootstrap packages install` installs `[bootstrap.packages]`",
+              "$ref": "#/$defs/bootstrap_hook"
+            },
+            "post-packages": {
+              "description": "runs after `mise bootstrap packages install` installs `[bootstrap.packages]`",
+              "$ref": "#/$defs/bootstrap_hook"
             }
           }
         }
