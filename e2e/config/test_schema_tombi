@@ -28,7 +28,7 @@ strict = true
 
 [[schemas]]
 path = "file://$SCHEMA_PATH"
-include = ["mise.toml", "mise-age.toml", "mise-env-directives.toml", "mise-os.toml"]
+include = ["mise.toml", "mise-age.toml", "mise-env-directives.toml", "mise-os.toml", "mise-bootstrap.toml"]
 
 [[schemas]]
 path = "file://$TASK_SCHEMA_PATH"
@@ -99,6 +99,23 @@ go = { version = "latest", os = "linux/x64" }
 rust = { version = "latest", os = ["linux/x64", "macos/arm64"], profile = "release" }
 TOML
 
+# Exercise [bootstrap.hooks] phase hooks in all documented value shapes:
+# a command string, an array of command strings, and a { run } table.
+cat >"$HOME/workdir/mise-bootstrap.toml" <<'TOML'
+[bootstrap.hooks]
+post-defaults = "killall Dock || true"
+pre-dotfiles = ["echo one", "echo two"]
+
+[bootstrap.hooks.pre-packages]
+run = "softwareupdate --install-rosetta --agree-to-license"
+
+[bootstrap.hooks.post-tools]
+run = ["mise exec -- corepack enable", "mise exec -- rustup component add rustfmt clippy"]
+
+[bootstrap.hooks.final]
+run = "gh auth status || gh auth login"
+TOML
+
 cat >"$HOME/workdir/mise-task-os.toml" <<'TOML'
 [build]
 run = "echo ok"
@@ -122,6 +139,7 @@ assert_succeed "$TOMBI_LINT mise.toml"
 assert_succeed "$TOMBI_LINT mise-age.toml"
 assert_succeed "$TOMBI_LINT mise-env-directives.toml"
 assert_succeed "$TOMBI_LINT mise-os.toml"
+assert_succeed "$TOMBI_LINT mise-bootstrap.toml"
 assert_succeed "$TOMBI_LINT mise-task-os.toml"
 assert_succeed "$TOMBI_LINT mise-registry-tool.toml"
 
@@ -142,7 +160,7 @@ strict = true
 
 [[schemas]]
 path = "file://$SCHEMA_PATH"
-include = ["mise-bad.toml", "mise-bad-age.toml", "mise-bad-env-default.toml", "mise-bad-env-directive.toml", "mise-bad-tmpl.toml", "mise-bad-tmpl-output-flag.toml", "mise-bad-os.toml", "mise-bad-watch-files.toml"]
+include = ["mise-bad.toml", "mise-bad-age.toml", "mise-bad-env-default.toml", "mise-bad-env-directive.toml", "mise-bad-tmpl.toml", "mise-bad-tmpl-output-flag.toml", "mise-bad-os.toml", "mise-bad-watch-files.toml", "mise-bad-bootstrap-hooks.toml"]
 
 [[schemas]]
 path = "file://$TASK_SCHEMA_PATH"
@@ -217,6 +235,14 @@ shell = "bash -c"
 TOML
 
 assert_fail "$TOMBI_LINT mise-bad-watch-files.toml"
+
+# A bootstrap hook value must be a string, array of strings, or { run } table.
+cat >"$HOME/workdir/mise-bad-bootstrap-hooks.toml" <<'TOML'
+[bootstrap.hooks]
+pre-packages = 123
+TOML
+
+assert_fail "$TOMBI_LINT mise-bad-bootstrap-hooks.toml"
 
 cat >"$HOME/workdir/mise-bad-task-os.toml" <<'TOML'
 [build]
