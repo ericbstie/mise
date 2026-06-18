@@ -3470,6 +3470,14 @@
             "post-packages": {
               "description": "runs after `mise bootstrap packages install` installs `[bootstrap.packages]`",
               "$ref": "#/$defs/bootstrap_hook"
+            },
+            "pre-dotfiles": {
+              "description": "runs before `mise dotfiles apply` applies `[dotfiles]`",
+              "$ref": "#/$defs/bootstrap_hook"
+            },
+            "post-dotfiles": {
+              "description": "runs after `mise dotfiles apply` applies `[dotfiles]`",
+              "$ref": "#/$defs/bootstrap_hook"
             }
           }
         }
