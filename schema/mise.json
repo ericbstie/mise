@@ -3494,6 +3494,14 @@
             "post-user": {
               "description": "runs after `mise bootstrap user apply` applies `[bootstrap.user]`",
               "$ref": "#/$defs/bootstrap_hook"
+            },
+            "pre-tools": {
+              "description": "runs before `mise install` installs missing `[tools]`",
+              "$ref": "#/$defs/bootstrap_hook"
+            },
+            "post-tools": {
+              "description": "runs after `mise install` installs missing `[tools]`",
+              "$ref": "#/$defs/bootstrap_hook"
             }
           }
         }
