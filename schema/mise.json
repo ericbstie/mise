@@ -3486,6 +3486,14 @@
             "post-defaults": {
               "description": "runs after `mise bootstrap macos-defaults apply` writes `[bootstrap.macos.defaults]`",
               "$ref": "#/$defs/bootstrap_hook"
+            },
+            "pre-user": {
+              "description": "runs before `mise bootstrap user apply` applies `[bootstrap.user]`",
+              "$ref": "#/$defs/bootstrap_hook"
+            },
+            "post-user": {
+              "description": "runs after `mise bootstrap user apply` applies `[bootstrap.user]`",
+              "$ref": "#/$defs/bootstrap_hook"
             }
           }
         }
